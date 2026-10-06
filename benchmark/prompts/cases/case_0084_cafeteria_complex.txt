@@ -1,0 +1,513 @@
+════════════════════════════════════════════════════════════════════
+FinanceBench — Caso case_0084
+Tipo de negocio : Cafetería / Restaurante
+Dificultad      : Complejo (múltiples ítems, financiamiento mixto)
+Duración        : 5 años  |  Moneda: COP
+════════════════════════════════════════════════════════════════════
+INSTRUCCIONES PARA EL EVALUADOR
+  1. Copia TODO el texto desde la línea "═══ INICIO DEL PROMPT" hasta
+     "═══ FIN DEL PROMPT" (incluyendo esas líneas) y pégalo en el chat.
+  2. Espera la respuesta completa (puede tardar 30-90 segundos).
+  3. Copia la respuesta JSON completa y guárdala en:
+       Backend/benchmark/prompts/results/<nombre-modelo>/case_0084_cafeteria_complex.json
+  4. Usa el botón "Ejecutar Benchmark" en la app para procesar resultados automáticamente.
+════════════════════════════════════════════════════════════════════
+
+═══ INICIO DEL PROMPT ══════════════════════════════════════════════
+
+You are an expert financial analyst specializing in business viability assessment for Latin American small and medium enterprises.
+
+Your task: Given the business project inputs below, perform a COMPLETE financial viability analysis for ALL 4 scenarios (optimista, normal, pesimista, controlado) and return the results as a single valid JSON object.
+
+CRITICAL REQUIREMENTS:
+- Return ONLY a valid JSON object. No explanations, no markdown, no code blocks.
+- Use EXACTLY these field names (the evaluation system is case-sensitive).
+- All monetary values in COP.
+- The project has 5 year(s) — annualData must contain exactly 5 entry(ies).
+- Include the "meta" section EXACTLY as provided below at the top of your JSON response.
+- The "inputs" section must be copied EXACTLY as provided — do NOT change any field values, especially inputs.general.projectType.
+
+CALCULATION RULES:
+1. Revenue per year:
+   - For each income item in inputs.income.items, use the corresponding scenario's (sellingPrice × (1 - discount/100)) × quantity × periodsPerYear
+   - Apply growthRate% compound growth each subsequent year: Revenue_year_N = Revenue_year_1 × (1 + growthRate/100)^(N-1)
+2. totalCOGS = sum(unitCost × quantity × periodsPerYear) per item, same growth rate applied
+3. grossProfit = revenue - totalCOGS
+4. Expenses (from inputs.expenses.items):
+   - frequency "monthly" → × 12 per year; "quarterly" → × 4; "annual" or "one-time" → × 1
+   - Apply each expense's growthRate% annually
+   - fixedExpenses = sum of items with type "fijo"
+   - variableExpenses = sum of items with type "variable"
+   - totalExpenses = fixedExpenses + variableExpenses
+5. ebitda = grossProfit - totalExpenses
+6. depreciation = sum(fixedAsset.value / fixedAsset.usefulLife) for each asset, stop after usefulLife years
+7. operationalProfit = ebitda - depreciation
+8. interestExpense: calculate annual interest from customSources loans using standard amortization (monthly payment = P × r/(1-(1+r)^-n), extract interest portion year by year)
+9. Tax loss carryforward: if operationalProfit - interestExpense < 0, carry loss to next year
+10. taxes = max(0, (operationalProfit - interestExpense - carriedLoss) × taxRate/100)
+11. netProfit = operationalProfit - interestExpense - taxes
+12. unleveredCashFlow = ebitda - taxes (approximation without debt)
+13. leveredCashFlow = netProfit + depreciation - annual_principal_payment
+14. NPV = -totalInitialInvestment + Σ(leveredCashFlow_year_t / (1 + discountRate/100)^t)
+    where totalInitialInvestment = sum of all investmentAssets fields + fixedAssets values
+15. IRR = rate that makes NPV = 0 (use numerical method, null if no convergence)
+16. paybackPeriod = year when cumulative leveredCashFlow ≥ 0 (linear interpolation, null if never)
+17. breakEvenPoint = totalExpenses_year1 / ((revenue_year1 - totalCOGS_year1) / totalUnits_year1)
+    simplified as: fixedExpenses_year1 / (averagePrice - averageUnitCost) — use null if not calculable
+
+META (include this exactly as-is at the top of your JSON response):
+{
+  "exportVersion": "1.0",
+  "caseId": "case_0084",
+  "projectType": "cafeteria",
+  "difficulty": "complex",
+  "seed": 84,
+  "generatedAt": "2026-03-05T13:43:30.872Z"
+}
+
+INPUT DATA (copy exactly into the "inputs" key of your response):
+{
+  "general": {
+    "projectName": "Cafetería Central",
+    "projectType": "restaurant",
+    "projectLife": 5,
+    "projectLifeUnit": "años",
+    "currency": "COP",
+    "taxRate": 33,
+    "discountRate": 12,
+    "startDate": "2025-01-01T00:00:00.000Z"
+  },
+  "investmentAssets": {
+    "civilWorks": 50000000,
+    "laborCost": 10000000,
+    "materials": 0,
+    "licenses": 1053791,
+    "furniture": 21000000,
+    "cash": 3000000,
+    "bank": 0,
+    "inventory": 4000000,
+    "fixedAssets": [
+      {
+        "name": "Máquina espresso",
+        "value": 106000000,
+        "usefulLife": 5,
+        "description": ""
+      },
+      {
+        "name": "Horno industrial",
+        "value": 4000000,
+        "usefulLife": 7,
+        "description": ""
+      }
+    ],
+    "customFields": [
+      {
+        "id": "cf_1",
+        "name": "Software POS",
+        "value": 796563,
+        "category": "tecnologia",
+        "description": "",
+        "isDepreciable": true,
+        "usefulLife": 3,
+        "addedBy": "user"
+      },
+      {
+        "id": "cf_2",
+        "name": "Aviso luminoso",
+        "value": 1009315,
+        "category": "marketing",
+        "description": "",
+        "isDepreciable": false,
+        "usefulLife": 5,
+        "addedBy": "user"
+      }
+    ]
+  },
+  "financing": {
+    "partners": [
+      {
+        "name": "Capital Fundador",
+        "contribution": 66240000
+      }
+    ],
+    "customSources": [
+      {
+        "id": "cs_1",
+        "name": "Banco de Occidente",
+        "amount": 117760000,
+        "type": "debt",
+        "interestRate": 0.13,
+        "termMonths": 48,
+        "addedBy": "user"
+      }
+    ],
+    "externalLoan": 0,
+    "interestRate": 18,
+    "loanTermMonths": 36,
+    "bankFinancingConfirmed": true
+  },
+  "income": {
+    "periodsPerYear": 365,
+    "items": [
+      {
+        "id": "item_1",
+        "name": "Café Espresso",
+        "type": "product",
+        "category": "food_beverage",
+        "growthRate": 0.06,
+        "periodsPerYear": 365,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 5506,
+            "unitCost": 1401,
+            "quantity": 74,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 5005,
+            "unitCost": 1401,
+            "quantity": 57,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 4505,
+            "unitCost": 1401,
+            "quantity": 37,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 5005,
+            "unitCost": 1401,
+            "quantity": 48,
+            "discount": 0
+          }
+        }
+      },
+      {
+        "id": "item_2",
+        "name": "Cappuccino",
+        "type": "product",
+        "category": "food_beverage",
+        "growthRate": 0.08,
+        "periodsPerYear": 365,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 6323,
+            "unitCost": 1609,
+            "quantity": 87,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 5748,
+            "unitCost": 1609,
+            "quantity": 67,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 5173,
+            "unitCost": 1609,
+            "quantity": 44,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 5748,
+            "unitCost": 1609,
+            "quantity": 57,
+            "discount": 0
+          }
+        }
+      },
+      {
+        "id": "item_3",
+        "name": "Tinto",
+        "type": "product",
+        "category": "food_beverage",
+        "growthRate": 0.05,
+        "periodsPerYear": 365,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 2465,
+            "unitCost": 448,
+            "quantity": 140,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 2241,
+            "unitCost": 448,
+            "quantity": 108,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 2017,
+            "unitCost": 448,
+            "quantity": 70,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 2241,
+            "unitCost": 448,
+            "quantity": 92,
+            "discount": 0
+          }
+        }
+      },
+      {
+        "id": "item_4",
+        "name": "Pastelería",
+        "type": "product",
+        "category": "food_beverage",
+        "growthRate": 0.06,
+        "periodsPerYear": 365,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 3335,
+            "unitCost": 1364,
+            "quantity": 35,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 3032,
+            "unitCost": 1364,
+            "quantity": 27,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 2729,
+            "unitCost": 1364,
+            "quantity": 18,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 3032,
+            "unitCost": 1364,
+            "quantity": 23,
+            "discount": 0
+          }
+        }
+      },
+      {
+        "id": "item_5",
+        "name": "Almuerzo del Día",
+        "type": "product",
+        "category": "food_beverage",
+        "growthRate": 0.06,
+        "periodsPerYear": 365,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 16646,
+            "unitCost": 6356,
+            "quantity": 31,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 15133,
+            "unitCost": 6356,
+            "quantity": 24,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 13620,
+            "unitCost": 6356,
+            "quantity": 16,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 15133,
+            "unitCost": 6356,
+            "quantity": 20,
+            "discount": 0
+          }
+        }
+      },
+      {
+        "id": "item_6",
+        "name": "Torta Especial",
+        "type": "product",
+        "category": "food_beverage",
+        "growthRate": 0.08,
+        "periodsPerYear": 365,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 8891,
+            "unitCost": 3233,
+            "quantity": 16,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 8083,
+            "unitCost": 3233,
+            "quantity": 12,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 7275,
+            "unitCost": 3233,
+            "quantity": 8,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 8083,
+            "unitCost": 3233,
+            "quantity": 10,
+            "discount": 0
+          }
+        }
+      },
+      {
+        "id": "item_7",
+        "name": "Batido de Frutas",
+        "type": "product",
+        "category": "food_beverage",
+        "growthRate": 0.07,
+        "periodsPerYear": 365,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 8566,
+            "unitCost": 2725,
+            "quantity": 17,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 7787,
+            "unitCost": 2725,
+            "quantity": 13,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 7008,
+            "unitCost": 2725,
+            "quantity": 8,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 7787,
+            "unitCost": 2725,
+            "quantity": 11,
+            "discount": 0
+          }
+        }
+      }
+    ],
+    "scenarios": []
+  },
+  "expenses": {
+    "items": [
+      {
+        "name": "Arriendo local",
+        "amount": 3000000,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Operacional",
+        "growthRate": 3,
+        "addedBy": "user"
+      },
+      {
+        "name": "Nómina",
+        "amount": 5000000,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Personal",
+        "growthRate": 4.63,
+        "addedBy": "user"
+      },
+      {
+        "name": "Servicios",
+        "amount": 841902,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Operacional",
+        "growthRate": 4,
+        "addedBy": "user"
+      },
+      {
+        "name": "Marketing",
+        "amount": 674089,
+        "type": "variable",
+        "frequency": "monthly",
+        "category": "Ventas",
+        "growthRate": 5,
+        "addedBy": "user"
+      },
+      {
+        "name": "Mantenimiento",
+        "amount": 287048,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Operacional",
+        "growthRate": 3,
+        "addedBy": "user"
+      },
+      {
+        "name": "Contador",
+        "amount": 508374,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Administrativo",
+        "growthRate": 0,
+        "addedBy": "user"
+      }
+    ]
+  }
+}
+
+REQUIRED JSON OUTPUT FORMAT:
+{
+  "meta": {
+  "exportVersion": "1.0",
+  "caseId": "case_0084",
+  "projectType": "cafeteria",
+  "difficulty": "complex",
+  "seed": 84,
+  "generatedAt": "2026-03-05T13:43:30.872Z"
+},
+  "inputs": <copy the inputs object EXACTLY as provided above — do not modify any values>,
+  "analysis": {
+    "lastCalculated": "<current ISO 8601 datetime>",
+    "scenarios": {
+      "optimista": {
+        "npv": <number>,
+        "irr": <number or null>,
+        "paybackPeriod": <number or null>,
+        "breakEvenPoint": <number or null>,
+        "annualData": [
+          {
+            "year": 1,
+            "revenue": <number>,
+            "totalCOGS": <number>,
+            "grossProfit": <number>,
+            "fixedExpenses": <number>,
+            "variableExpenses": <number>,
+            "totalExpenses": <number>,
+            "ebitda": <number>,
+            "depreciation": <number>,
+            "operationalProfit": <number>,
+            "interestExpense": <number>,
+            "taxes": <number>,
+            "netProfit": <number>,
+            "unleveredCashFlow": <number>,
+            "leveredCashFlow": <number>
+          }
+          <repeat for each of the 5 years>
+        ]
+      },
+      "normal": { <same structure> },
+      "pesimista": { <same structure> },
+      "controlado": { <same structure> }
+    }
+  }
+}
+
+IMPORTANT — IF YOU ARE AN AI CODE EDITOR (Claude Code, Codex, Windsurf, Cursor, etc.):
+You MUST write the complete JSON output to a file using your Write tool.
+Save the file to: results/MODEL_FOLDER/case_0084_cafeteria_complex.json
+
+Where MODEL_FOLDER depends on the model you are running:
+- Claude Sonnet 4.6 → claude-sonnet-4
+- Claude Haiku 4.5 → claude-haiku-4
+- GPT-4o → gpt-4o
+- GPT-4.1 → gpt-4.1
+- Gemini 2.5 Flash → gemini-2.5-flash
+
+Write the file using your Write/save tool. Do NOT just output the JSON as text.
+
+═══ FIN DEL PROMPT ═════════════════════════════════════════════════

@@ -1,0 +1,376 @@
+{
+  "meta": {
+    "exportVersion": "1.0",
+    "caseId": "case_0505",
+    "projectType": "consultoria",
+    "difficulty": "simple",
+    "seed": 505,
+    "generatedAt": "2026-03-05T13:43:31.207Z"
+  },
+  "inputs": {
+    "general": {
+      "projectName": "BizConsult Colombia",
+      "projectType": "services",
+      "projectLife": 3,
+      "projectLifeUnit": "años",
+      "currency": "COP",
+      "taxRate": 33,
+      "discountRate": 18,
+      "startDate": "2025-01-01T00:00:00.000Z"
+    },
+    "investmentAssets": {
+      "civilWorks": 0,
+      "laborCost": 0,
+      "materials": 0,
+      "licenses": 1805285,
+      "furniture": 997569,
+      "cash": 2000000,
+      "bank": 0,
+      "inventory": 0,
+      "fixedAssets": [
+        {
+          "name": "Equipos de cómputo",
+          "value": 8000000,
+          "usefulLife": 3,
+          "description": ""
+        }
+      ],
+      "customFields": []
+    },
+    "financing": {
+      "partners": [
+        {
+          "name": "Capital Fundador",
+          "contribution": 11096968
+        }
+      ],
+      "customSources": [
+        {
+          "id": "cs_1",
+          "name": "Banco Bogotá",
+          "amount": 708317,
+          "type": "debt",
+          "interestRate": 0.26,
+          "termMonths": 24,
+          "addedBy": "user"
+        }
+      ],
+      "externalLoan": 0,
+      "interestRate": 18,
+      "loanTermMonths": 36,
+      "bankFinancingConfirmed": true
+    },
+    "income": {
+      "periodsPerYear": 12,
+      "items": [
+        {
+          "id": "svc_1",
+          "name": "Consultoría gerencial",
+          "type": "service",
+          "category": "consulting",
+          "growthRate": 0.08,
+          "periodsPerYear": 12,
+          "scenarios": {
+            "optimista": {
+              "sellingPrice": 8340846,
+              "unitCost": 1813228,
+              "quantity": 6,
+              "discount": 0
+            },
+            "normal": {
+              "sellingPrice": 7252910,
+              "unitCost": 1813228,
+              "quantity": 4,
+              "discount": 0
+            },
+            "pesimista": {
+              "sellingPrice": 6164974,
+              "unitCost": 1813228,
+              "quantity": 2,
+              "discount": 0
+            },
+            "controlado": {
+              "sellingPrice": 7252910,
+              "unitCost": 1813228,
+              "quantity": 3,
+              "discount": 0
+            }
+          }
+        }
+      ],
+      "scenarios": []
+    },
+    "expenses": {
+      "items": [
+        {
+          "name": "Equipo consultor",
+          "amount": 5000000,
+          "type": "fijo",
+          "frequency": "monthly",
+          "category": "Personal",
+          "growthRate": 5.69,
+          "addedBy": "user"
+        },
+        {
+          "name": "Oficina",
+          "amount": 2309221,
+          "type": "fijo",
+          "frequency": "monthly",
+          "category": "Operacional",
+          "growthRate": 3,
+          "addedBy": "user"
+        },
+        {
+          "name": "Software profesional",
+          "amount": 348028,
+          "type": "fijo",
+          "frequency": "monthly",
+          "category": "Tecnología",
+          "growthRate": 5,
+          "addedBy": "user"
+        }
+      ]
+    }
+  },
+  "analysis": {
+    "lastCalculated": "2026-03-15T19:13:19.189Z",
+    "scenarios": {
+      "optimista": {
+        "npv": 534609984.02,
+        "irr": 1978.52,
+        "paybackPeriod": 0.05,
+        "breakEvenPoint": 121021752.26,
+        "annualData": [
+          {
+            "year": 1,
+            "revenue": 600540912,
+            "totalCOGS": 130552416,
+            "grossProfit": 469988496,
+            "fixedExpenses": 91886988,
+            "variableExpenses": 130552416,
+            "totalExpenses": 222439404,
+            "ebitda": 378101508,
+            "depreciation": 2666666.67,
+            "operationalProfit": 375434841.33,
+            "interestExpense": 159012.18,
+            "taxes": 123841023.62,
+            "netProfit": 251434805.54,
+            "unleveredCashFlow": 254260484.38,
+            "leveredCashFlow": 253472591.79
+          },
+          {
+            "year": 2,
+            "revenue": 601021344.73,
+            "totalCOGS": 130656857.93,
+            "grossProfit": 470364486.8,
+            "fixedExpenses": 96341124.36,
+            "variableExpenses": 130656857.93,
+            "totalExpenses": 226997982.29,
+            "ebitda": 374023362.44,
+            "depreciation": 2666666.67,
+            "operationalProfit": 371356695.77,
+            "interestExpense": 104260.81,
+            "taxes": 122513303.54,
+            "netProfit": 248739131.42,
+            "unleveredCashFlow": 251510058.9,
+            "leveredCashFlow": 250722166.32
+          },
+          {
+            "year": 3,
+            "revenue": 601502161.81,
+            "totalCOGS": 130761383.42,
+            "grossProfit": 470740778.39,
+            "fixedExpenses": 101024897.75,
+            "variableExpenses": 130761383.42,
+            "totalExpenses": 231786281.17,
+            "ebitda": 369715880.64,
+            "depreciation": 2666666.67,
+            "operationalProfit": 367049213.97,
+            "interestExpense": 39400.29,
+            "taxes": 121113238.52,
+            "netProfit": 245896575.17,
+            "unleveredCashFlow": 248602642.12,
+            "leveredCashFlow": 248169868.01
+          }
+        ]
+      },
+      "normal": {
+        "npv": 230099129.46,
+        "irr": 883.3,
+        "paybackPeriod": 0.11,
+        "breakEvenPoint": 126283567.41,
+        "annualData": [
+          {
+            "year": 1,
+            "revenue": 348139680,
+            "totalCOGS": 87034944,
+            "grossProfit": 261104736,
+            "fixedExpenses": 91886988,
+            "variableExpenses": 87034944,
+            "totalExpenses": 178921932,
+            "ebitda": 169217748,
+            "depreciation": 2666666.67,
+            "operationalProfit": 166551081.33,
+            "interestExpense": 159012.18,
+            "taxes": 54909382.82,
+            "netProfit": 111482686.34,
+            "unleveredCashFlow": 114308365.18,
+            "leveredCashFlow": 113520472.59
+          },
+          {
+            "year": 2,
+            "revenue": 348418191.74,
+            "totalCOGS": 87104571.96,
+            "grossProfit": 261313619.79,
+            "fixedExpenses": 96341124.36,
+            "variableExpenses": 87104571.96,
+            "totalExpenses": 183445696.32,
+            "ebitda": 164972495.43,
+            "depreciation": 2666666.67,
+            "operationalProfit": 162305828.76,
+            "interestExpense": 104260.81,
+            "taxes": 53526517.42,
+            "netProfit": 108675050.53,
+            "unleveredCashFlow": 111445978.01,
+            "leveredCashFlow": 110658085.42
+          },
+          {
+            "year": 3,
+            "revenue": 348696926.3,
+            "totalCOGS": 87174255.61,
+            "grossProfit": 261522670.68,
+            "fixedExpenses": 101024897.75,
+            "variableExpenses": 87174255.61,
+            "totalExpenses": 188199153.36,
+            "ebitda": 160497772.94,
+            "depreciation": 2666666.67,
+            "operationalProfit": 157831106.27,
+            "interestExpense": 39400.29,
+            "taxes": 52071262.97,
+            "netProfit": 105720443.01,
+            "unleveredCashFlow": 108426509.96,
+            "leveredCashFlow": 107993735.85
+          }
+        ]
+      },
+      "pesimista": {
+        "npv": 1715971.05,
+        "irr": 19.28,
+        "paybackPeriod": 1.76,
+        "breakEvenPoint": 134176288.92,
+        "annualData": [
+          {
+            "year": 1,
+            "revenue": 147959376,
+            "totalCOGS": 43517472,
+            "grossProfit": 104441904,
+            "fixedExpenses": 91886988,
+            "variableExpenses": 43517472,
+            "totalExpenses": 135404460,
+            "ebitda": 12554916,
+            "depreciation": 2666666.67,
+            "operationalProfit": 9888249.33,
+            "interestExpense": 159012.18,
+            "taxes": 3210648.26,
+            "netProfit": 6518588.9,
+            "unleveredCashFlow": 9344267.74,
+            "leveredCashFlow": 8556375.15
+          },
+          {
+            "year": 2,
+            "revenue": 148077743.5,
+            "totalCOGS": 43552285.98,
+            "grossProfit": 104525457.52,
+            "fixedExpenses": 96341124.36,
+            "variableExpenses": 43552285.98,
+            "totalExpenses": 139893410.34,
+            "ebitda": 8184333.16,
+            "depreciation": 2666666.67,
+            "operationalProfit": 5517666.5,
+            "interestExpense": 104260.81,
+            "taxes": 1786423.88,
+            "netProfit": 3626981.81,
+            "unleveredCashFlow": 6397909.29,
+            "leveredCashFlow": 5610016.7
+          },
+          {
+            "year": 3,
+            "revenue": 148196205.7,
+            "totalCOGS": 43587127.81,
+            "grossProfit": 104609077.89,
+            "fixedExpenses": 101024897.75,
+            "variableExpenses": 43587127.81,
+            "totalExpenses": 144612025.55,
+            "ebitda": 3584180.14,
+            "depreciation": 2666666.67,
+            "operationalProfit": 917513.48,
+            "interestExpense": 39400.29,
+            "taxes": 289777.35,
+            "netProfit": 588335.84,
+            "unleveredCashFlow": 3294402.79,
+            "leveredCashFlow": 2861628.68
+          }
+        ]
+      },
+      "controlado": {
+        "npv": 134939474.29,
+        "irr": 539.1,
+        "paybackPeriod": 0.18,
+        "breakEvenPoint": 126283567.41,
+        "annualData": [
+          {
+            "year": 1,
+            "revenue": 261104760,
+            "totalCOGS": 65276208,
+            "grossProfit": 195828552,
+            "fixedExpenses": 91886988,
+            "variableExpenses": 65276208,
+            "totalExpenses": 157163196,
+            "ebitda": 103941564,
+            "depreciation": 2666666.67,
+            "operationalProfit": 101274897.33,
+            "interestExpense": 159012.18,
+            "taxes": 33368242.1,
+            "netProfit": 67747643.06,
+            "unleveredCashFlow": 70573321.9,
+            "leveredCashFlow": 69785429.31
+          },
+          {
+            "year": 2,
+            "revenue": 261313643.81,
+            "totalCOGS": 65328428.97,
+            "grossProfit": 195985214.84,
+            "fixedExpenses": 96341124.36,
+            "variableExpenses": 65328428.97,
+            "totalExpenses": 161669553.33,
+            "ebitda": 99644090.48,
+            "depreciation": 2666666.67,
+            "operationalProfit": 96977423.81,
+            "interestExpense": 104260.81,
+            "taxes": 31968143.79,
+            "netProfit": 64905019.21,
+            "unleveredCashFlow": 67675946.69,
+            "leveredCashFlow": 66888054.11
+          },
+          {
+            "year": 3,
+            "revenue": 261522694.72,
+            "totalCOGS": 65380691.71,
+            "grossProfit": 196142003.01,
+            "fixedExpenses": 101024897.75,
+            "variableExpenses": 65380691.71,
+            "totalExpenses": 166405589.46,
+            "ebitda": 95117105.27,
+            "depreciation": 2666666.67,
+            "operationalProfit": 92450438.6,
+            "interestExpense": 39400.29,
+            "taxes": 30495642.64,
+            "netProfit": 61915395.67,
+            "unleveredCashFlow": 64621462.62,
+            "leveredCashFlow": 64188688.52
+          }
+        ]
+      }
+    }
+  }
+}

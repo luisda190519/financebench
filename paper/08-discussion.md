@@ -1,0 +1,27 @@
+# 7. Discussion
+
+## 7.1 Key Findings
+
+Our evaluation reveals four principal findings. First, **current LLMs can perform basic financial arithmetic but struggle with complete financial analysis**: the best-performing model achieves [X]% overall field-level accuracy, with performance concentrated in direct computations (revenue, COGS) and degrading substantially for derived metrics. Second, **error propagation through the computation chain is the dominant failure mode**: accuracy drops from [X]% on Tier 1 tasks to [Y]% on Tier 4 summary metrics, confirming that cascading errors—not isolated arithmetic mistakes—are the fundamental challenge. Third, **IRR computation and tax loss carryforward represent near-universal failure points**, likely because they require numerical methods and conditional multi-year logic, respectively, that differ fundamentally from text generation. Fourth, **the proprietary–open-source gap is task-dependent**, averaging [X] percentage points overall but ranging from [Y] pp on simple arithmetic to [Z] pp on complex reasoning tasks.
+
+## 7.2 Implications for Practice
+
+These findings have concrete implications for three stakeholder groups.
+
+**For developers building financial AI applications**, model selection should be informed by the specific task requirements. [PLACEHOLDER: Recommend specific models for specific tasks based on results.] Regardless of model choice, verification layers are essential: even the best model errs on [X]% of fields, and errors in summary metrics like NPV can have significant economic consequences. Structured output prompting with explicit calculation rules improves reliability but does not eliminate errors—human-in-the-loop review remains necessary for investment decisions and loan applications.
+
+**For entrepreneurs and SMEs in emerging markets**, where FinanceBench's business templates are grounded, AI-generated financial projections should be treated as first drafts rather than final analyses. The democratization benefit is real—an LLM can produce a structured viability analysis in minutes that would otherwise require hours of spreadsheet work or expensive professional consultation (Yang, 2025; Estefan et al., 2023). But critical decisions must incorporate human financial review, particularly for metrics that depend on the full computation chain. As Polanco (2024) demonstrated in an educational context, AI chatbots for financial literacy are a "double-edged sword" whose benefits depend on users understanding the tool's limitations.
+
+**For researchers**, FinanceBench reveals that financial numerical reasoning constitutes a distinct capability dimension not fully captured by existing benchmarks. The cascading computation structure, domain-specific conventions, and multi-scenario consistency requirements present challenges that generalize beyond finance to any domain where multi-step structured computation is required (engineering analysis, scientific modeling, actuarial computation).
+
+## 7.3 Comparison with Prior Work
+
+Our findings extend and complement those of existing financial and numerical benchmarks. FinBen (Xie et al., 2024) reported that GPT-4 leads on most financial NLP tasks; our results [confirm/extend] this ranking to numerical analysis, [with/without] significant reordering among models. The key distinction is granularity: FinBen's classification and prediction tasks yield binary or categorical accuracy, while our field-level comparison reveals that models often get the *direction* right (positive NPV, correct viability recommendation) but the *magnitude* wrong—a nuance invisible in binary benchmarks that has significant practical consequences.
+
+FinQA (Chen et al., 2021) found that models struggle with multi-step arithmetic over financial tables; we confirm that this difficulty extends—and intensifies—when models must *generate* complete financial projections rather than answer questions about existing data. The error types we observe (arithmetic, formula, cascading) are consistent with FinQA's taxonomy but occur at higher frequencies and with larger magnitudes, reflecting our longer computation chains (12 steps vs. FinQA's typical 2–4 step expressions).
+
+## 7.4 Future Directions
+
+Several extensions of this work are warranted. **Multilingual evaluation** would test whether prompting in Spanish—the natural language of the application and its target users—affects numerical accuracy. **Advanced prompting strategies**, including chain-of-thought decomposition (Wei et al., 2022) and few-shot examples with worked solutions, could establish upper bounds on zero-shot-improvable performance. **Tool-augmented evaluation**, where models are given access to calculators or spreadsheet tools, would test whether external computation aids can compensate for internal numerical limitations.
+
+On a longer horizon, we envision FinanceBench as a **living benchmark** with an annual competition cycle following the paradigm established by GLUE (Wang et al., 2019) and ImageNet. The dataset can be extended with additional business types, geographic contexts, and task categories (portfolio analysis, risk assessment), while the oracle engine's modular design enables community-contributed calculation modules. Integration with FinanceAgentBench (2025) for end-to-end agent evaluation—combining information gathering, computation, and report generation—represents a natural convergence of the two benchmark programs.

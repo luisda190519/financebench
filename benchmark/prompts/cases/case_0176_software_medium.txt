@@ -1,0 +1,298 @@
+════════════════════════════════════════════════════════════════════
+FinanceBench — Caso case_0176
+Tipo de negocio : Software / SaaS
+Dificultad      : Medio (varios ítems, algo de complejidad)
+Duración        : 3 años  |  Moneda: COP
+════════════════════════════════════════════════════════════════════
+INSTRUCCIONES PARA EL EVALUADOR
+  1. Copia TODO el texto desde la línea "═══ INICIO DEL PROMPT" hasta
+     "═══ FIN DEL PROMPT" (incluyendo esas líneas) y pégalo en el chat.
+  2. Espera la respuesta completa (puede tardar 30-90 segundos).
+  3. Copia la respuesta JSON completa y guárdala en:
+       Backend/benchmark/prompts/results/<nombre-modelo>/case_0176_software_medium.json
+  4. Usa el botón "Ejecutar Benchmark" en la app para procesar resultados automáticamente.
+════════════════════════════════════════════════════════════════════
+
+═══ INICIO DEL PROMPT ══════════════════════════════════════════════
+
+You are an expert financial analyst specializing in business viability assessment for Latin American small and medium enterprises.
+
+Your task: Given the business project inputs below, perform a COMPLETE financial viability analysis for ALL 4 scenarios (optimista, normal, pesimista, controlado) and return the results as a single valid JSON object.
+
+CRITICAL REQUIREMENTS:
+- Return ONLY a valid JSON object. No explanations, no markdown, no code blocks.
+- Use EXACTLY these field names (the evaluation system is case-sensitive).
+- All monetary values in COP.
+- The project has 3 year(s) — annualData must contain exactly 3 entry(ies).
+- Include the "meta" section EXACTLY as provided below at the top of your JSON response.
+- The "inputs" section must be copied EXACTLY as provided — do NOT change any field values, especially inputs.general.projectType.
+
+CALCULATION RULES:
+1. Revenue per year:
+   - For each income item in inputs.income.items, use the corresponding scenario's (sellingPrice × (1 - discount/100)) × quantity × periodsPerYear
+   - Apply growthRate% compound growth each subsequent year: Revenue_year_N = Revenue_year_1 × (1 + growthRate/100)^(N-1)
+2. totalCOGS = sum(unitCost × quantity × periodsPerYear) per item, same growth rate applied
+3. grossProfit = revenue - totalCOGS
+4. Expenses (from inputs.expenses.items):
+   - frequency "monthly" → × 12 per year; "quarterly" → × 4; "annual" or "one-time" → × 1
+   - Apply each expense's growthRate% annually
+   - fixedExpenses = sum of items with type "fijo"
+   - variableExpenses = sum of items with type "variable"
+   - totalExpenses = fixedExpenses + variableExpenses
+5. ebitda = grossProfit - totalExpenses
+6. depreciation = sum(fixedAsset.value / fixedAsset.usefulLife) for each asset, stop after usefulLife years
+7. operationalProfit = ebitda - depreciation
+8. interestExpense: calculate annual interest from customSources loans using standard amortization (monthly payment = P × r/(1-(1+r)^-n), extract interest portion year by year)
+9. Tax loss carryforward: if operationalProfit - interestExpense < 0, carry loss to next year
+10. taxes = max(0, (operationalProfit - interestExpense - carriedLoss) × taxRate/100)
+11. netProfit = operationalProfit - interestExpense - taxes
+12. unleveredCashFlow = ebitda - taxes (approximation without debt)
+13. leveredCashFlow = netProfit + depreciation - annual_principal_payment
+14. NPV = -totalInitialInvestment + Σ(leveredCashFlow_year_t / (1 + discountRate/100)^t)
+    where totalInitialInvestment = sum of all investmentAssets fields + fixedAssets values
+15. IRR = rate that makes NPV = 0 (use numerical method, null if no convergence)
+16. paybackPeriod = year when cumulative leveredCashFlow ≥ 0 (linear interpolation, null if never)
+17. breakEvenPoint = totalExpenses_year1 / ((revenue_year1 - totalCOGS_year1) / totalUnits_year1)
+    simplified as: fixedExpenses_year1 / (averagePrice - averageUnitCost) — use null if not calculable
+
+META (include this exactly as-is at the top of your JSON response):
+{
+  "exportVersion": "1.0",
+  "caseId": "case_0176",
+  "projectType": "software",
+  "difficulty": "medium",
+  "seed": 176,
+  "generatedAt": "2026-03-05T13:43:30.946Z"
+}
+
+INPUT DATA (copy exactly into the "inputs" key of your response):
+{
+  "general": {
+    "projectName": "SaaS Andino",
+    "projectType": "software",
+    "projectLife": 3,
+    "projectLifeUnit": "años",
+    "currency": "COP",
+    "taxRate": 25,
+    "discountRate": 15,
+    "startDate": "2025-01-01T00:00:00.000Z"
+  },
+  "investmentAssets": {
+    "civilWorks": 0,
+    "laborCost": 39000000,
+    "materials": 0,
+    "licenses": 623451,
+    "furniture": 1427004,
+    "cash": 6000000,
+    "bank": 0,
+    "inventory": 0,
+    "fixedAssets": [
+      {
+        "name": "Equipos de cómputo",
+        "value": 3000000,
+        "usefulLife": 3,
+        "description": ""
+      }
+    ],
+    "customFields": []
+  },
+  "financing": {
+    "partners": [
+      {
+        "name": "Socio Principal",
+        "contribution": 30632774
+      }
+    ],
+    "customSources": [
+      {
+        "id": "cs_1",
+        "name": "Davivienda",
+        "amount": 17990677,
+        "type": "debt",
+        "interestRate": 0.13,
+        "termMonths": 24,
+        "addedBy": "user"
+      }
+    ],
+    "externalLoan": 0,
+    "interestRate": 18,
+    "loanTermMonths": 36,
+    "bankFinancingConfirmed": true
+  },
+  "income": {
+    "periodsPerYear": 12,
+    "items": [
+      {
+        "id": "tier_1",
+        "name": "Plan Básico",
+        "type": "service",
+        "category": "subscription",
+        "growthRate": 0.2,
+        "periodsPerYear": 12,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 105317,
+            "unitCost": 12638,
+            "quantity": 161,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 105317,
+            "unitCost": 12638,
+            "quantity": 115,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 105317,
+            "unitCost": 12638,
+            "quantity": 69,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 105317,
+            "unitCost": 12638,
+            "quantity": 98,
+            "discount": 0
+          }
+        }
+      },
+      {
+        "id": "tier_2",
+        "name": "Plan Profesional",
+        "type": "service",
+        "category": "subscription",
+        "growthRate": 0.15,
+        "periodsPerYear": 12,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 179254,
+            "unitCost": 21510,
+            "quantity": 88,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 179254,
+            "unitCost": 21510,
+            "quantity": 63,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 179254,
+            "unitCost": 21510,
+            "quantity": 38,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 179254,
+            "unitCost": 21510,
+            "quantity": 54,
+            "discount": 0
+          }
+        }
+      }
+    ],
+    "scenarios": []
+  },
+  "expenses": {
+    "items": [
+      {
+        "name": "Equipo de desarrollo",
+        "amount": 16000000,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Personal",
+        "growthRate": 5.37,
+        "addedBy": "user"
+      },
+      {
+        "name": "Hosting / infraestructura",
+        "amount": 624201,
+        "type": "variable",
+        "frequency": "monthly",
+        "category": "Tecnología",
+        "growthRate": 8.19,
+        "addedBy": "user"
+      },
+      {
+        "name": "Herramientas SaaS",
+        "amount": 548982,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Tecnología",
+        "growthRate": 5,
+        "addedBy": "user"
+      },
+      {
+        "name": "Marketing digital",
+        "amount": 2000000,
+        "type": "variable",
+        "frequency": "monthly",
+        "category": "Ventas",
+        "growthRate": 10,
+        "addedBy": "user"
+      }
+    ]
+  }
+}
+
+REQUIRED JSON OUTPUT FORMAT:
+{
+  "meta": {
+  "exportVersion": "1.0",
+  "caseId": "case_0176",
+  "projectType": "software",
+  "difficulty": "medium",
+  "seed": 176,
+  "generatedAt": "2026-03-05T13:43:30.946Z"
+},
+  "inputs": <copy the inputs object EXACTLY as provided above — do not modify any values>,
+  "analysis": {
+    "lastCalculated": "<current ISO 8601 datetime>",
+    "scenarios": {
+      "optimista": {
+        "npv": <number>,
+        "irr": <number or null>,
+        "paybackPeriod": <number or null>,
+        "breakEvenPoint": <number or null>,
+        "annualData": [
+          {
+            "year": 1,
+            "revenue": <number>,
+            "totalCOGS": <number>,
+            "grossProfit": <number>,
+            "fixedExpenses": <number>,
+            "variableExpenses": <number>,
+            "totalExpenses": <number>,
+            "ebitda": <number>,
+            "depreciation": <number>,
+            "operationalProfit": <number>,
+            "interestExpense": <number>,
+            "taxes": <number>,
+            "netProfit": <number>,
+            "unleveredCashFlow": <number>,
+            "leveredCashFlow": <number>
+          }
+          <repeat for each of the 3 years>
+        ]
+      },
+      "normal": { <same structure> },
+      "pesimista": { <same structure> },
+      "controlado": { <same structure> }
+    }
+  }
+}
+
+IMPORTANT — IF YOU ARE AN AI CODE EDITOR (Claude Code, Codex, Windsurf, Cursor, etc.):
+You MUST write the complete JSON output to a file using your Write tool.
+Save the file to: results/MODEL_FOLDER/case_0176_software_medium.json
+
+Where MODEL_FOLDER depends on the model you are running:
+- Claude Sonnet 4.6 → claude-sonnet-4
+- Claude Haiku 4.5 → claude-haiku-4
+- GPT-4o → gpt-4o
+- GPT-4.1 → gpt-4.1
+- Gemini 2.5 Flash → gemini-2.5-flash
+
+Write the file using your Write/save tool. Do NOT just output the JSON as text.
+
+═══ FIN DEL PROMPT ═════════════════════════════════════════════════

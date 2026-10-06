@@ -1,0 +1,255 @@
+════════════════════════════════════════════════════════════════════
+FinanceBench — Caso case_0709
+Tipo de negocio : Agricultura
+Dificultad      : Simple (pocos ítems, estructura básica)
+Duración        : 8 años  |  Moneda: COP
+════════════════════════════════════════════════════════════════════
+INSTRUCCIONES PARA EL EVALUADOR
+  1. Copia TODO el texto desde la línea "═══ INICIO DEL PROMPT" hasta
+     "═══ FIN DEL PROMPT" (incluyendo esas líneas) y pégalo en el chat.
+  2. Espera la respuesta completa (puede tardar 30-90 segundos).
+  3. Copia la respuesta JSON completa y guárdala en:
+       Backend/benchmark/prompts/results/<nombre-modelo>/case_0709_agricultura_simple.json
+  4. Usa el botón "Ejecutar Benchmark" en la app para procesar resultados automáticamente.
+════════════════════════════════════════════════════════════════════
+
+═══ INICIO DEL PROMPT ══════════════════════════════════════════════
+
+You are an expert financial analyst specializing in business viability assessment for Latin American small and medium enterprises.
+
+Your task: Given the business project inputs below, perform a COMPLETE financial viability analysis for ALL 4 scenarios (optimista, normal, pesimista, controlado) and return the results as a single valid JSON object.
+
+CRITICAL REQUIREMENTS:
+- Return ONLY a valid JSON object. No explanations, no markdown, no code blocks.
+- Use EXACTLY these field names (the evaluation system is case-sensitive).
+- All monetary values in COP.
+- The project has 8 year(s) — annualData must contain exactly 8 entry(ies).
+- Include the "meta" section EXACTLY as provided below at the top of your JSON response.
+- The "inputs" section must be copied EXACTLY as provided — do NOT change any field values, especially inputs.general.projectType.
+
+CALCULATION RULES:
+1. Revenue per year:
+   - For each income item in inputs.income.items, use the corresponding scenario's (sellingPrice × (1 - discount/100)) × quantity × periodsPerYear
+   - Apply growthRate% compound growth each subsequent year: Revenue_year_N = Revenue_year_1 × (1 + growthRate/100)^(N-1)
+2. totalCOGS = sum(unitCost × quantity × periodsPerYear) per item, same growth rate applied
+3. grossProfit = revenue - totalCOGS
+4. Expenses (from inputs.expenses.items):
+   - frequency "monthly" → × 12 per year; "quarterly" → × 4; "annual" or "one-time" → × 1
+   - Apply each expense's growthRate% annually
+   - fixedExpenses = sum of items with type "fijo"
+   - variableExpenses = sum of items with type "variable"
+   - totalExpenses = fixedExpenses + variableExpenses
+5. ebitda = grossProfit - totalExpenses
+6. depreciation = sum(fixedAsset.value / fixedAsset.usefulLife) for each asset, stop after usefulLife years
+7. operationalProfit = ebitda - depreciation
+8. interestExpense: calculate annual interest from customSources loans using standard amortization (monthly payment = P × r/(1-(1+r)^-n), extract interest portion year by year)
+9. Tax loss carryforward: if operationalProfit - interestExpense < 0, carry loss to next year
+10. taxes = max(0, (operationalProfit - interestExpense - carriedLoss) × taxRate/100)
+11. netProfit = operationalProfit - interestExpense - taxes
+12. unleveredCashFlow = ebitda - taxes (approximation without debt)
+13. leveredCashFlow = netProfit + depreciation - annual_principal_payment
+14. NPV = -totalInitialInvestment + Σ(leveredCashFlow_year_t / (1 + discountRate/100)^t)
+    where totalInitialInvestment = sum of all investmentAssets fields + fixedAssets values
+15. IRR = rate that makes NPV = 0 (use numerical method, null if no convergence)
+16. paybackPeriod = year when cumulative leveredCashFlow ≥ 0 (linear interpolation, null if never)
+17. breakEvenPoint = totalExpenses_year1 / ((revenue_year1 - totalCOGS_year1) / totalUnits_year1)
+    simplified as: fixedExpenses_year1 / (averagePrice - averageUnitCost) — use null if not calculable
+
+META (include this exactly as-is at the top of your JSON response):
+{
+  "exportVersion": "1.0",
+  "caseId": "case_0709",
+  "projectType": "agricultura",
+  "difficulty": "simple",
+  "seed": 709,
+  "generatedAt": "2026-03-05T13:43:31.433Z"
+}
+
+INPUT DATA (copy exactly into the "inputs" key of your response):
+{
+  "general": {
+    "projectName": "Finca La Esperanza",
+    "projectType": "agriculture",
+    "projectLife": 8,
+    "projectLifeUnit": "años",
+    "currency": "COP",
+    "taxRate": 15,
+    "discountRate": 12,
+    "startDate": "2025-01-01T00:00:00.000Z"
+  },
+  "investmentAssets": {
+    "civilWorks": 48000000,
+    "laborCost": 0,
+    "materials": 6000000,
+    "licenses": 1761486,
+    "furniture": 1131652,
+    "cash": 10000000,
+    "bank": 0,
+    "inventory": 2000000,
+    "fixedAssets": [
+      {
+        "name": "Maquinaria agrícola",
+        "value": 38000000,
+        "usefulLife": 8,
+        "description": ""
+      }
+    ],
+    "customFields": []
+  },
+  "financing": {
+    "partners": [
+      {
+        "name": "Socio Principal",
+        "contribution": 69360000
+      }
+    ],
+    "customSources": [
+      {
+        "id": "cs_1",
+        "name": "Banco de Occidente",
+        "amount": 32640000,
+        "type": "debt",
+        "interestRate": 0.13,
+        "termMonths": 60,
+        "addedBy": "user"
+      }
+    ],
+    "externalLoan": 0,
+    "interestRate": 18,
+    "loanTermMonths": 36,
+    "bankFinancingConfirmed": true
+  },
+  "income": {
+    "periodsPerYear": 2,
+    "items": [
+      {
+        "id": "crop_1",
+        "name": "Café pergamino",
+        "type": "product",
+        "category": "agriculture",
+        "growthRate": 0.03,
+        "periodsPerYear": 2,
+        "scenarios": {
+          "optimista": {
+            "sellingPrice": 6038,
+            "unitCost": 2768,
+            "quantity": 1544,
+            "discount": 0
+          },
+          "normal": {
+            "sellingPrice": 5032,
+            "unitCost": 2768,
+            "quantity": 1235,
+            "discount": 0
+          },
+          "pesimista": {
+            "sellingPrice": 3522,
+            "unitCost": 2768,
+            "quantity": 803,
+            "discount": 0
+          },
+          "controlado": {
+            "sellingPrice": 5032,
+            "unitCost": 2768,
+            "quantity": 1050,
+            "discount": 0
+          }
+        }
+      }
+    ],
+    "scenarios": []
+  },
+  "expenses": {
+    "items": [
+      {
+        "name": "Jornales y mano de obra",
+        "amount": 4000000,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Personal",
+        "growthRate": 3.18,
+        "addedBy": "user"
+      },
+      {
+        "name": "Insumos agrícolas",
+        "amount": 3000000,
+        "type": "variable",
+        "frequency": "monthly",
+        "category": "Operacional",
+        "growthRate": 5,
+        "addedBy": "user"
+      },
+      {
+        "name": "Agua y riego",
+        "amount": 260988,
+        "type": "fijo",
+        "frequency": "monthly",
+        "category": "Operacional",
+        "growthRate": 4,
+        "addedBy": "user"
+      }
+    ]
+  }
+}
+
+REQUIRED JSON OUTPUT FORMAT:
+{
+  "meta": {
+  "exportVersion": "1.0",
+  "caseId": "case_0709",
+  "projectType": "agricultura",
+  "difficulty": "simple",
+  "seed": 709,
+  "generatedAt": "2026-03-05T13:43:31.433Z"
+},
+  "inputs": <copy the inputs object EXACTLY as provided above — do not modify any values>,
+  "analysis": {
+    "lastCalculated": "<current ISO 8601 datetime>",
+    "scenarios": {
+      "optimista": {
+        "npv": <number>,
+        "irr": <number or null>,
+        "paybackPeriod": <number or null>,
+        "breakEvenPoint": <number or null>,
+        "annualData": [
+          {
+            "year": 1,
+            "revenue": <number>,
+            "totalCOGS": <number>,
+            "grossProfit": <number>,
+            "fixedExpenses": <number>,
+            "variableExpenses": <number>,
+            "totalExpenses": <number>,
+            "ebitda": <number>,
+            "depreciation": <number>,
+            "operationalProfit": <number>,
+            "interestExpense": <number>,
+            "taxes": <number>,
+            "netProfit": <number>,
+            "unleveredCashFlow": <number>,
+            "leveredCashFlow": <number>
+          }
+          <repeat for each of the 8 years>
+        ]
+      },
+      "normal": { <same structure> },
+      "pesimista": { <same structure> },
+      "controlado": { <same structure> }
+    }
+  }
+}
+
+IMPORTANT — IF YOU ARE AN AI CODE EDITOR (Claude Code, Codex, Windsurf, Cursor, etc.):
+You MUST write the complete JSON output to a file using your Write tool.
+Save the file to: results/MODEL_FOLDER/case_0709_agricultura_simple.json
+
+Where MODEL_FOLDER depends on the model you are running:
+- Claude Sonnet 4.6 → claude-sonnet-4
+- Claude Haiku 4.5 → claude-haiku-4
+- GPT-4o → gpt-4o
+- GPT-4.1 → gpt-4.1
+- Gemini 2.5 Flash → gemini-2.5-flash
+
+Write the file using your Write/save tool. Do NOT just output the JSON as text.
+
+═══ FIN DEL PROMPT ═════════════════════════════════════════════════

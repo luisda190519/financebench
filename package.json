@@ -1,0 +1,37 @@
+{
+  "name": "financebench",
+  "version": "1.0.0",
+  "private": false,
+  "description": "FinanceBench: benchmark de LLMs sobre evaluación financiera de proyectos (1000 casos de solo entradas, oráculo determinista).",
+  "license": "MIT",
+  "author": "Luis (luisda190519)",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "jest",
+    "generate:dataset": "node benchmark/generator/index.js",
+    "generate:prompts": "node benchmark/generator/generatePrompts.js",
+    "generate:prompts:quick": "node benchmark/generator/generatePrompts.js --subset quick",
+    "generate:prompts:all": "node benchmark/generator/generatePrompts.js --subset all",
+    "benchmark:validate": "node benchmark/generator/validate.js",
+    "benchmark:import-all": "node benchmark/scripts/importAll.js",
+    "benchmark:aggregate": "node benchmark/scripts/aggregate.js",
+    "benchmark:export-results": "node benchmark/scripts/exportResults.js",
+    "benchmark:run-api": "node -r dotenv/config benchmark/scripts/runAPI.js",
+    "benchmark:run-groq": "node -r dotenv/config benchmark/scripts/runAPI.js --model llama-3.3-70b",
+    "benchmark:run-deepseek": "node -r dotenv/config benchmark/scripts/runAPI.js --model deepseek-chat"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": ["<rootDir>/tests"]
+  },
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "financial": "^0.2.4",
+    "mongoose": "^8.16.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

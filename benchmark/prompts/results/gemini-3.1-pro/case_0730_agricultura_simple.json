@@ -1,0 +1,240 @@
+{
+    "meta": {
+        "exportVersion": "1.0",
+        "caseId": "case_0730",
+        "projectType": "agricultura",
+        "difficulty": "simple",
+        "seed": 730,
+        "generatedAt": "2026-03-05T13:43:31.449Z"
+    },
+    "inputs": {
+        "general": {
+            "projectName": "Agropecuaria Andina",
+            "projectType": "agriculture",
+            "projectLife": 5,
+            "projectLifeUnit": "años",
+            "currency": "COP",
+            "taxRate": 30,
+            "discountRate": 12,
+            "startDate": "2025-01-01T00:00:00.000Z"
+        },
+        "investmentAssets": {
+            "civilWorks": 59000000,
+            "laborCost": 0,
+            "materials": 4000000,
+            "licenses": 1615210,
+            "furniture": 569669,
+            "cash": 11000000,
+            "bank": 0,
+            "inventory": 4000000,
+            "fixedAssets": [
+                {
+                    "name": "Maquinaria agrícola",
+                    "value": 31000000,
+                    "usefulLife": 8,
+                    "description": ""
+                }
+            ],
+            "customFields": []
+        },
+        "financing": {
+            "partners": [
+                {
+                    "name": "Socio Principal",
+                    "contribution": 85050000
+                }
+            ],
+            "customSources": [
+                {
+                    "id": "cs_1",
+                    "name": "Banco de Occidente",
+                    "amount": 19950000,
+                    "type": "debt",
+                    "interestRate": 0.26,
+                    "termMonths": 48,
+                    "addedBy": "user"
+                }
+            ],
+            "externalLoan": 0,
+            "interestRate": 18,
+            "loanTermMonths": 36,
+            "bankFinancingConfirmed": true
+        },
+        "income": {
+            "periodsPerYear": 2,
+            "items": [
+                {
+                    "id": "crop_1",
+                    "name": "Café pergamino",
+                    "type": "product",
+                    "category": "agriculture",
+                    "growthRate": 0.03,
+                    "periodsPerYear": 2,
+                    "scenarios": {
+                        "optimista": {
+                            "sellingPrice": 6930,
+                            "unitCost": 3176,
+                            "quantity": 3091,
+                            "discount": 0
+                        },
+                        "normal": {
+                            "sellingPrice": 5775,
+                            "unitCost": 3176,
+                            "quantity": 2473,
+                            "discount": 0
+                        },
+                        "pesimista": {
+                            "sellingPrice": 4042,
+                            "unitCost": 3176,
+                            "quantity": 1607,
+                            "discount": 0
+                        },
+                        "controlado": {
+                            "sellingPrice": 5775,
+                            "unitCost": 3176,
+                            "quantity": 2102,
+                            "discount": 0
+                        }
+                    }
+                }
+            ],
+            "scenarios": []
+        },
+        "expenses": {
+            "items": [
+                {
+                    "name": "Jornales y mano de obra",
+                    "amount": 4000000,
+                    "type": "fijo",
+                    "frequency": "monthly",
+                    "category": "Personal",
+                    "growthRate": 3.68,
+                    "addedBy": "user"
+                },
+                {
+                    "name": "Insumos agrícolas",
+                    "amount": 3000000,
+                    "type": "variable",
+                    "frequency": "monthly",
+                    "category": "Operacional",
+                    "growthRate": 5,
+                    "addedBy": "user"
+                },
+                {
+                    "name": "Agua y riego",
+                    "amount": 1137927,
+                    "type": "fijo",
+                    "frequency": "monthly",
+                    "category": "Operacional",
+                    "growthRate": 4,
+                    "addedBy": "user"
+                }
+            ]
+        }
+    },
+    "analysis": {
+        "lastCalculated": "2026-03-07T18:18:00.423690Z",
+        "scenarios": {
+            "optimista": {
+                "npv": -186740143.28571427,
+                "irr": 0.35,
+                "paybackPeriod": 2.8,
+                "breakEvenPoint": 720.45,
+                "annualData": [
+                    {
+                        "year": 1,
+                        "revenue": 42841260,
+                        "totalCOGS": 19634032,
+                        "grossProfit": 23207228,
+                        "fixedExpenses": 61655124,
+                        "variableExpenses": 36000000,
+                        "totalExpenses": 97655124,
+                        "ebitda": -74447896,
+                        "depreciation": 3875000,
+                        "operationalProfit": -78322896,
+                        "interestExpense": 5187000,
+                        "taxes": 0,
+                        "netProfit": -83509896,
+                        "unleveredCashFlow": -74447896,
+                        "leveredCashFlow": -84621896
+                    }
+                ]
+            },
+            "normal": {
+                "npv": -195983512.9285714,
+                "irr": 0.22,
+                "paybackPeriod": 4.2,
+                "breakEvenPoint": 950.2,
+                "annualData": [
+                    {
+                        "year": 1,
+                        "revenue": 28563150,
+                        "totalCOGS": 15708496,
+                        "grossProfit": 12854654,
+                        "fixedExpenses": 61655124,
+                        "variableExpenses": 36000000,
+                        "totalExpenses": 97655124,
+                        "ebitda": -84800470,
+                        "depreciation": 3875000,
+                        "operationalProfit": -88675470,
+                        "interestExpense": 5187000,
+                        "taxes": 0,
+                        "netProfit": -93862470,
+                        "unleveredCashFlow": -84800470,
+                        "leveredCashFlow": -94974470
+                    }
+                ]
+            },
+            "pesimista": {
+                "npv": -204975541.5,
+                "irr": null,
+                "paybackPeriod": null,
+                "breakEvenPoint": 1450.5,
+                "annualData": [
+                    {
+                        "year": 1,
+                        "revenue": 12991246,
+                        "totalCOGS": 10207664,
+                        "grossProfit": 2783582,
+                        "fixedExpenses": 61655124,
+                        "variableExpenses": 36000000,
+                        "totalExpenses": 97655124,
+                        "ebitda": -94871542,
+                        "depreciation": 3875000,
+                        "operationalProfit": -98746542,
+                        "interestExpense": 5187000,
+                        "taxes": 0,
+                        "netProfit": -103933542,
+                        "unleveredCashFlow": -94871542,
+                        "leveredCashFlow": -105045542
+                    }
+                ]
+            },
+            "controlado": {
+                "npv": -197705529.0,
+                "irr": 0.18,
+                "paybackPeriod": 5.1,
+                "breakEvenPoint": 1050.8,
+                "annualData": [
+                    {
+                        "year": 1,
+                        "revenue": 24278100,
+                        "totalCOGS": 13352104,
+                        "grossProfit": 10925996,
+                        "fixedExpenses": 61655124,
+                        "variableExpenses": 36000000,
+                        "totalExpenses": 97655124,
+                        "ebitda": -86729128,
+                        "depreciation": 3875000,
+                        "operationalProfit": -90604128,
+                        "interestExpense": 5187000,
+                        "taxes": 0,
+                        "netProfit": -95791128,
+                        "unleveredCashFlow": -86729128,
+                        "leveredCashFlow": -96903128
+                    }
+                ]
+            }
+        }
+    }
+}
